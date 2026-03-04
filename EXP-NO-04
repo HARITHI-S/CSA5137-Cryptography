@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char text[100], key[100];
+    int i, j = 0;
+
+    printf("Enter plaintext: ");
+    fgets(text, sizeof(text), stdin); 
+    text[strcspn(text, "\n")] = '\0';  // FIXED: "\n" not "\\n"
+
+    printf("Enter key: ");
+    scanf("%s", key);
+
+    for(i = 0; text[i] != '\0'; i++) {  // FIXED: '\0' not '\\0'
+        if(isalpha(text[i])) {
+            char base = isupper(text[i]) ? 'A' : 'a';
+            char kbase = toupper(key[j % strlen(key)]) - 'A';
+            text[i] = (text[i] - base + kbase) % 26 + base;
+            j++;
+        }
+    }
+
+    printf("Ciphertext: %s\n", text);  // FIXED: "\n" not "\\n"
+    return 0;
+}
