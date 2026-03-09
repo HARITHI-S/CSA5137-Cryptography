@@ -1,0 +1,59 @@
+#include <stdio.h>
+
+long gcd(long a, long b) {
+    while (b != 0) {
+        long t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+long modInverse(long e, long phi) {
+    long t = 0, newt = 1;
+    long r = phi, newr = e;
+
+    while (newr != 0) {
+        long q = r / newr;
+
+        long temp = newt;
+        newt = t - q * newt;
+        t = temp;
+
+        temp = newr;
+        newr = r - q * newr;
+        r = temp;
+    }
+
+    if (t < 0)
+        t += phi;
+
+    return t;
+}
+
+int main() {
+    long p, q, n, phi, e, d;
+
+    printf("Enter two prime numbers (p and q): ");
+    scanf("%ld %ld", &p, &q);
+
+    n = p * q;
+    phi = (p - 1) * (q - 1);
+
+    printf("Enter public key e: ");
+    scanf("%ld", &e);
+
+    if (gcd(e, phi) != 1) {
+        printf("e must be coprime with phi(n)\n");
+        return 0;
+    }
+
+    d = modInverse(e, phi);
+
+    printf("Public Key (e, n) = (%ld, %ld)\n", e, n);
+    printf("Private Key (d, n) = (%ld, %ld)\n", d, n);
+
+    printf("\nIf private key d is leaked, n must also be changed for security.\n");
+
+    return 0;
+}
